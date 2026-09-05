@@ -1,418 +1,796 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>استوديو الملحنين والمؤلفين الموسيقيين (Composer Studio Pro)</title>
-    <!-- Tailwind CSS CDN -->
+    <title>SAFESTAR • Web DAW Studio Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- PayPal JavaScript SDK (استبدل YOUR_PAYPAL_CLIENT_ID بمعرف حسابك التجاري الحقيقي لاحقاً) -->
-    <script src="https://www.paypal.com/sdk/js?client-id=sb&currency=USD"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        slate: { 950: '#020617', 900: '#0f172a', 800: '#1e293b', 700: '#334155', 400: '#94a3b8', 300: '#cbd5e1', 100: '#f1f5f9' },
-                        indigo: { 600: '#4f46e5', 500: '#6366f1', 400: '#818cf8', 300: '#a5b4fc', 900: '#312e81' },
-                        purple: { 600: '#9333ea', 500: '#a855f7', 400: '#c084fc' },
-                        amber: { 500: '#f59e0b', 400: '#fbbf24', 300: '#fcd34d' },
-                        emerald: { 500: '#10b981', 400: '#34d399' },
-                        rose: { 600: '#e11d48' }
+                        slate: { 950: '#020617', 900: '#0f172a', 850: '#172033', 800: '#1e293b', 750: '#283548', 700: '#334155', 400: '#94a3b8', 300: '#cbd5e1', 100: '#f1f5f9' },
+                        cyan: { 500: '#06b6d4', 400: '#22d3ee' },
+                        indigo: { 600: '#4f46e5', 500: '#6366f1', 400: '#818cf8', 300: '#a5b4fc' },
+                        purple: { 600: '#9333ea', 500: '#a855f7', 400: '#c084fc' }
                     }
                 }
             }
         }
     </script>
 </head>
-<body class="min-h-screen w-full bg-slate-950 text-slate-100 font-sans pb-24">
+<body class="min-h-screen w-full flex flex-col items-center justify-start bg-slate-950 p-3 md:p-6 text-slate-100 font-sans select-none antialiased">
 
-    <!-- Top Navbar Header -->
-    <header class="border-b border-indigo-900/40 bg-slate-900/90 backdrop-blur-md sticky top-0 z-40">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-col sm:flex-row items-center justify-between gap-3">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-500 text-white font-bold flex items-center justify-center shadow-lg shadow-indigo-500/20">
-                    🎵
-                </div>
-                <div>
-                    <h1 class="text-lg font-extrabold font-serif bg-gradient-to-r from-indigo-300 via-purple-200 to-amber-200 bg-clip-text text-transparent">
-                        استوديو الملحنين والمؤلفين الموسيقيين (Composer Studio Pro)
-                    </h1>
-                    <p class="text-[11px] text-slate-400">منصة التأليف والتوزيع الموسيقي وتوليد المقامات والألحان</p>
-                </div>
-            </div>
+    <div id="root" class="w-full max-w-6xl flex flex-col gap-6"></div>
 
-            <!-- Subscription Status & Upgrade Button -->
-            <div id="header-subscription-status" class="flex items-center gap-3">
-                <button onclick="openPricingModal()" class="px-4 py-2 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-extrabold text-xs flex items-center gap-2 shadow-lg shadow-amber-500/20 transition animate-pulse">
-                    ✨ <span>الاشتراك عبر PayPal ($18/شهر أو $43/سنة)</span>
-                </button>
-            </div>
-        </div>
-    </header>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-    <!-- Main Studio Body -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-8 space-y-8">
-        
-        <!-- Banner Announcement for Subscriptions -->
-        <div id="subscription-banner" class="p-6 rounded-3xl bg-gradient-to-r from-indigo-900/60 via-purple-900/40 to-slate-900 border border-indigo-500/30 flex flex-col md:flex-row items-center justify-between gap-4 shadow-xl">
-            <div class="space-y-1">
-                <span class="px-3 py-1 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 inline-block mb-1">
-                    عروض اشتراكات الملحنين 🎵
-                </span>
-                <h3 class="text-xl font-bold font-serif text-white">
-                    اشترك الآن في استوديو الملحنين عبر PayPal بـ $18 شهرياً أو $43 سنوياً!
-                </h3>
-                <p class="text-xs text-slate-300">احصل على ترخيص استخدام تجاري 100% لتأليف وتوزيع وتصدير الألحان بحرية تامة.</p>
-            </div>
-            <button onclick="openPricingModal()" class="px-6 py-3 rounded-2xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-extrabold text-xs shrink-0 shadow-lg">
-                عرض باقات الاشتراك الدفع عبر PayPal
-            </button>
-        </div>
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
 
-        <!-- SECTION 1: Virtual Piano Keyboard -->
-        <section class="p-6 md:p-8 rounded-3xl bg-slate-900 border border-slate-800 space-y-6 shadow-2xl">
-            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-slate-800 pb-4">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-2xl bg-indigo-600/20 text-indigo-400 font-bold flex items-center justify-center border border-indigo-500/30">🎹</div>
-                    <div>
-                        <h2 class="text-lg font-bold font-serif text-slate-100">لوحة البيانو الافتراضي (Interactive Piano Keyboard)</h2>
-                        <p class="text-xs text-slate-400">اضغط على المفاتيح لتأليف واختبار النغمات الحية بالصوت الصافي</p>
-                    </div>
-                </div>
-
-                <div class="flex items-center gap-2">
-                    <span class="text-xs text-slate-400 font-bold">خامة الصوت:</span>
-                    <select id="sound-type-select" class="bg-slate-950 border border-slate-800 text-slate-200 text-xs font-bold rounded-xl px-3 py-2 focus:outline-none focus:border-indigo-500">
-                        <option value="sine">بيانو ناعم (Sine)</option>
-                        <option value="triangle" selected>بيانو كلاسيكي (Triangle)</option>
-                        <option value="square">سينث رقمي (Square)</option>
-                        <option value="sawtooth">سينث دافئ (Sawtooth)</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="overflow-x-auto pb-4">
-                <div id="piano-keyboard-container" class="flex justify-center min-w-[650px] p-2 bg-slate-950 rounded-2xl border border-slate-800/80 shadow-inner relative dir-ltr"></div>
-            </div>
-        </section>
-
-        <!-- SECTION 2: Chord Progressions -->
-        <section class="p-6 md:p-8 rounded-3xl bg-slate-900 border border-slate-800 space-y-6 shadow-2xl">
-            <div class="border-b border-slate-800 pb-4">
-                <h2 class="text-lg font-bold font-serif text-slate-100 flex items-center gap-2">
-                    🎛️ <span>مساعد التتابعات التوافقية والمقامات (Chord Progressions)</span>
-                </h2>
-                <p class="text-xs text-slate-400 mt-1">اختر التتابع التوافقي المناسب لنوع أغنيتك وعزف التتابع بضغطة زر واحدة</p>
-            </div>
-            <div id="chord-progressions-container" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
-        </section>
-
-        <!-- SECTION 3: Rhythm Sequencer -->
-        <section class="p-6 md:p-8 rounded-3xl bg-slate-900 border border-slate-800 space-y-6 shadow-2xl">
-            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-slate-800 pb-4">
-                <div>
-                    <h2 class="text-lg font-bold font-serif text-slate-100 flex items-center gap-2">
-                        📻 <span>صانع الإيقاعات والبيتميكر (8-Step Rhythm Sequencer)</span>
-                    </h2>
-                    <p class="text-xs text-slate-400 mt-1">صمم الإيقاع الخاص بمقطوعتك مع التحكم بالسرعة (BPM)</p>
-                </div>
-                <div class="flex items-center gap-4">
-                    <div class="flex items-center gap-2 bg-slate-950 px-3 py-1.5 rounded-2xl border border-slate-800">
-                        <span id="bpm-label" class="text-xs font-bold text-slate-300">السرعة: 100 BPM</span>
-                        <input type="range" min="60" max="180" value="100" oninput="updateBpm(this.value)" class="w-24 accent-purple-500 cursor-pointer" />
-                    </div>
-                    <button id="btn-toggle-seq" onclick="toggleSequencer()" class="px-5 py-2.5 rounded-2xl font-bold text-xs flex items-center gap-2 shadow-lg transition bg-gradient-to-r from-purple-600 to-indigo-600 text-white">
-                        ▶ <span>تشغيل الإيقاع</span>
-                    </button>
-                </div>
-            </div>
-
-            <div class="space-y-3 bg-slate-950 p-4 md:p-6 rounded-2xl border border-slate-800/80 dir-rtl">
-                <div class="flex items-center gap-3">
-                    <span class="w-20 text-xs font-bold text-slate-300 shrink-0">🥁 Kick</span>
-                    <div id="track-kick" class="flex-1 grid grid-cols-8 gap-2"></div>
-                </div>
-                <div class="flex items-center gap-3">
-                    <span class="w-20 text-xs font-bold text-slate-300 shrink-0">🪘 Snare</span>
-                    <div id="track-snare" class="flex-1 grid grid-cols-8 gap-2"></div>
-                </div>
-                <div class="flex items-center gap-3">
-                    <span class="w-20 text-xs font-bold text-slate-300 shrink-0">✨ Hi-Hat</span>
-                    <div id="track-hihat" class="flex-1 grid grid-cols-8 gap-2"></div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- PAYPAL SUBSCRIPTION PRICING MODAL -->
-    <div id="pricing-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md dir-rtl overflow-y-auto hidden">
-        <div class="relative w-full max-w-3xl rounded-3xl bg-slate-900 border border-indigo-500/30 p-6 md:p-8 space-y-6 shadow-2xl my-8">
-            <div class="text-center space-y-2 border-b border-slate-800 pb-4">
-                <span class="px-3.5 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 inline-block">
-                    اشتراكات استوديو الملحنين والمؤلفين 🎵
-                </span>
-                <h2 class="text-2xl font-extrabold font-serif text-white">اختر خطة الاشتراك المناسبة واشترك عبر PayPal</h2>
-                <p class="text-xs text-slate-400">وصول كامل للأدوات والمقامات وتصدير الألحان بترخيص تجاري 100%</p>
-            </div>
-
-            <div id="plans-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
-
-            <!-- Real PayPal Button Container -->
-            <div class="p-5 rounded-2xl bg-slate-950 border border-slate-800 space-y-4">
-                <div class="flex items-center justify-between text-xs text-slate-300">
-                    <span>الباقة المختارة: <strong id="modal-selected-plan-name" class="text-amber-300">سنوية</strong></span>
-                    <span id="modal-selected-plan-price" class="font-mono text-amber-300 font-bold text-base">$43 USD</span>
-                </div>
-
-                <div id="paypal-success-box" class="p-4 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-bold text-center flex items-center justify-center gap-2 hidden">
-                    ✅ تم الدفع وتفعيل الاشتراك بنجاح عبر PayPal! 🎉
-                </div>
-
-                <!-- زر PayPal الذكي الرسمي الذي يتأكد من الرصيد والبطاقة الحقيقية -->
-                <div id="paypal-button-container" class="mt-2"></div>
-
-                <p class="text-[11px] text-slate-500 text-center">🔒 دفع حقيقي وآمن ومشفر 100% عبر خدمة PayPal العالمية</p>
-            </div>
-
-            <button onclick="closePricingModal()" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold">إلغاء وإغلاق</button>
-        </div>
-    </div>
-
-    <!-- Application Audio Engine & Core Logic -->
-    <script>
-        let audioCtx = null;
-        function getAudioContext() {
-            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-            return audioCtx;
-        }
-
+        // --- 1. AUDIO ENGINE ---
         const NOTE_FREQUENCIES = {
-            "C3": 130.81, "C#3": 138.59, "D3": 146.83, "D#3": 155.56, "E3": 164.81, "F3": 174.61, "F#3": 185.00, "G3": 196.00, "G#3": 207.65, "A3": 220.00, "A#3": 233.08, "B3": 246.94,
-            "C4": 261.63, "C#4": 277.18, "D4": 293.66, "D#4": 311.13, "E4": 329.63, "F4": 349.23, "F#4": 369.99, "G4": 392.00, "G#4": 415.30, "A4": 440.00, "A#4": 466.16, "B4": 493.88, "C5": 523.25
+            'C2': 65.41, 'C3': 130.81, 'C#3': 138.59, 'D3': 146.83, 'D#3': 155.56, 'E3': 164.81, 'F3': 174.61, 'F#3': 185.00, 'G3': 196.00, 'G#3': 207.65, 'A3': 220.00, 'A#3': 233.08, 'B3': 246.94,
+            'C4': 261.63, 'C#4': 277.18, 'D4': 293.66, 'D#4': 311.13, 'E4': 329.63, 'F4': 349.23, 'F#4': 369.99, 'G4': 392.00, 'G#4': 415.30, 'A4': 440.00, 'A#4': 466.16, 'B4': 493.88, 'C5': 523.25,
         };
 
-        function playNote(freq, type = "triangle", duration = 1.2) {
-            try {
-                const ctx = getAudioContext();
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
-                osc.type = type;
-                osc.frequency.setValueAtTime(freq, ctx.currentTime);
-                gain.gain.setValueAtTime(0.3, ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
-                osc.connect(gain);
-                gain.connect(ctx.destination);
-                osc.start();
-                osc.stop(ctx.currentTime + duration);
-            } catch (err) { console.error(err); }
-        }
+        const NOTE_LIST = [
+            'C5', 'B4', 'A#4', 'A4', 'G#4', 'G4', 'F#4', 'F4', 'E4', 'D#4', 'D4', 'C#4', 'C4',
+            'B3', 'A#3', 'A3', 'G#3', 'G3', 'F#3', 'F3', 'E3', 'D#3', 'D3', 'C#3', 'C3'
+        ];
 
-        function playChord(frequencies, duration = 1.2) {
-            const type = document.getElementById('sound-type-select').value;
-            frequencies.forEach(f => playNote(f, type, duration));
-        }
+        class AudioEngine {
+            constructor() {
+                this.ctx = null;
+                this.masterGain = null;
+                this.delayNode = null;
+                this.delayFeedbackGain = null;
+                this.filterNode = null;
+                this.destinationNode = null;
+                this.mediaRecorder = null;
+                this.recordedChunks = [];
+                this.isPlaying = false;
+                this.currentStep = 0;
+                this.tempo = 120;
+                this.swing = 0;
+                this.timerId = null;
+                this.nextStepTime = 0;
+                this.lookaheadMs = 25;
+                this.scheduleAheadTime = 0.1;
+                this.onStepChangeCallbacks = [];
+                this.noiseBuffer = null;
+            }
 
-        function playDrumHit(type) {
-            try {
-                const ctx = getAudioContext();
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
-                if (type === "kick") {
-                    osc.frequency.setValueAtTime(150, ctx.currentTime);
-                    osc.frequency.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
-                    gain.gain.setValueAtTime(0.6, ctx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
-                    osc.connect(gain);
-                    gain.connect(ctx.destination);
-                    osc.start();
-                    osc.stop(ctx.currentTime + 0.3);
-                } else {
-                    const bufferSize = ctx.sampleRate * 0.1;
-                    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-                    const data = buffer.getChannelData(0);
-                    for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
-                    const noise = ctx.createBufferSource();
-                    noise.buffer = buffer;
-                    gain.gain.setValueAtTime(0.3, ctx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
-                    noise.connect(gain);
-                    gain.connect(ctx.destination);
-                    noise.start();
+            init() {
+                if (this.ctx) {
+                    if (this.ctx.state === 'suspended') this.ctx.resume();
+                    return;
                 }
-            } catch (err) { console.error(err); }
-        }
+                const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+                this.ctx = new AudioContextClass();
 
-        const CHORD_PROGRESSIONS = [
-            { id: "pop", name: "تتابع البوب الشهير (I - V - vi - IV)", genre: "Pop", chords: ["C Major", "G Major", "A Minor", "F Major"], frequencies: [[NOTE_FREQUENCIES.C4, NOTE_FREQUENCIES.E4, NOTE_FREQUENCIES.G4], [NOTE_FREQUENCIES.G3, NOTE_FREQUENCIES.B3, NOTE_FREQUENCIES.D4], [NOTE_FREQUENCIES.A3, NOTE_FREQUENCIES.C4, NOTE_FREQUENCIES.E4], [NOTE_FREQUENCIES.F3, NOTE_FREQUENCIES.A3, NOTE_FREQUENCIES.C4]] },
-            { id: "arabic", name: "مقام النهاوند العربي", genre: "شرقي", chords: ["C Minor", "F Minor", "G Major", "C Minor"], frequencies: [[NOTE_FREQUENCIES.C4, NOTE_FREQUENCIES["D#4"], NOTE_FREQUENCIES.G4], [NOTE_FREQUENCIES.F3, NOTE_FREQUENCIES.G3, NOTE_FREQUENCIES.C4], [NOTE_FREQUENCIES.G3, NOTE_FREQUENCIES.B3, NOTE_FREQUENCIES.D4], [NOTE_FREQUENCIES.C4, NOTE_FREQUENCIES["D#4"], NOTE_FREQUENCIES.G4]] }
-        ];
+                this.masterGain = this.ctx.createGain();
+                this.masterGain.gain.value = 0.8;
 
-        const SUBSCRIPTION_PLANS = [
-            { id: "monthly", name: "الباقة الشهرية للملحنين", price: "18.00", period: "شهر", features: ["وصول كامل لجميع المقامات والأدوات", "تصدير الألحان بجودة استوديو عالية", "ترخيص تجاري 100% للأعمال"] },
-            { id: "yearly", name: "الباقة السنوية الاحترافية", price: "43.00", period: "سنة", savingsBadge: "وفر 80%", features: ["وصول كامل لجميع المقامات والأدوات", "تصدير الألحان بجودة استوديو عالية", "ترخيص تجاري 100% للأعمال", "تحديثات مجانية مدى الحياة"] }
-        ];
+                this.filterNode = this.ctx.createBiquadFilter();
+                this.filterNode.type = 'lowpass';
+                this.filterNode.frequency.value = 4000;
 
-        let state = {
-            activeSubscription: null,
-            selectedPlan: SUBSCRIPTION_PLANS[1],
-            bpm: 100,
-            isPlayingSeq: false,
-            currentStep: 0,
-            kickSteps: [true, false, false, false, true, false, false, false],
-            snareSteps: [false, false, true, false, false, false, true, false],
-            hihatSteps: [true, true, true, true, true, true, true, true]
-        };
+                this.delayNode = this.ctx.createDelay();
+                this.delayNode.delayTime.value = 0.25;
+                this.delayFeedbackGain = this.ctx.createGain();
+                this.delayFeedbackGain.gain.value = 0.3;
 
-        let seqInterval = null;
+                this.delayNode.connect(this.delayFeedbackGain);
+                this.delayFeedbackGain.connect(this.delayNode);
 
-        function initPianoKeyboard() {
-            const container = document.getElementById('piano-keyboard-container');
-            container.innerHTML = Object.keys(NOTE_FREQUENCIES).map(keyName => {
-                const isBlack = keyName.includes("#");
-                return `<button onclick="handleKeyClick('${keyName}')" id="key-${keyName}" class="transition-all duration-75 select-none relative flex flex-col justify-end items-center pb-3 text-[10px] font-mono font-bold rounded-b-xl ${isBlack ? 'w-8 h-28 -mx-4 z-10 bg-slate-900 text-slate-300 border border-slate-700' : 'w-12 h-44 border-r border-slate-200/20 bg-slate-100 text-slate-800'}"><span>${keyName}</span></button>`;
-            }).join('');
-        }
+                this.destinationNode = this.ctx.createMediaStreamDestination();
 
-        function handleKeyClick(keyName) {
-            const freq = NOTE_FREQUENCIES[keyName];
-            const type = document.getElementById('sound-type-select').value;
-            if (freq) playNote(freq, type, 1.2);
-        }
+                this.filterNode.connect(this.masterGain);
+                this.delayNode.connect(this.masterGain);
+                this.masterGain.connect(this.ctx.destination);
+                this.masterGain.connect(this.destinationNode);
 
-        function renderChordProgressions() {
-            const container = document.getElementById('chord-progressions-container');
-            container.innerHTML = CHORD_PROGRESSIONS.map(prog => `
-                <div class="p-5 rounded-2xl bg-slate-950 border border-slate-800 space-y-4">
-                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-indigo-500/20 text-indigo-300">${prog.genre}</span>
-                    <h3 class="font-bold text-slate-200 text-sm font-serif">${prog.name}</h3>
-                    <div class="flex flex-wrap gap-1.5">${prog.chords.map(c => `<span class="px-2.5 py-1 rounded-xl bg-slate-900 text-slate-300 text-xs font-mono">${c}</span>`).join('')}</div>
-                    <button onclick="playProgressionFreqs('${prog.id}')" class="w-full py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs">▶ عزف التتابع</button>
-                </div>
-            `).join('');
-        }
+                this.generateNoiseBuffer();
+            }
 
-        function playProgressionFreqs(id) {
-            const prog = CHORD_PROGRESSIONS.find(p => p.id === id);
-            if (prog) prog.frequencies.forEach((f, idx) => setTimeout(() => playChord(f, 1.2), idx * 1000));
-        }
+            getAudioContext() { return this.ctx; }
 
-        function updateBpm(val) {
-            state.bpm = Number(val);
-            document.getElementById('bpm-label').innerText = `السرعة: ${state.bpm} BPM`;
-        }
+            generateNoiseBuffer() {
+                if (!this.ctx) return;
+                const bufferSize = this.ctx.sampleRate * 2;
+                const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+                const output = buffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) output[i] = Math.random() * 2 - 1;
+                this.noiseBuffer = buffer;
+            }
 
-        function toggleSequencer() {
-            state.isPlayingSeq = !state.isPlayingSeq;
-            const btn = document.getElementById('btn-toggle-seq');
-            if (state.isPlayingSeq) {
-                btn.className = "px-5 py-2.5 rounded-2xl font-bold text-xs flex items-center gap-2 bg-rose-600 text-white";
-                btn.innerHTML = "⏹ إيقاف الإيقاع";
-                const stepDuration = (60 / state.bpm / 2) * 1000;
-                seqInterval = setInterval(() => {
-                    state.currentStep = (state.currentStep + 1) % 8;
-                    if (state.kickSteps[state.currentStep]) playDrumHit("kick");
-                    if (state.snareSteps[state.currentStep]) playDrumHit("snare");
-                    if (state.hihatSteps[state.currentStep]) playDrumHit("hihat");
-                    renderSequencerGrid();
-                }, stepDuration);
-            } else {
-                btn.className = "px-5 py-2.5 rounded-2xl font-bold text-xs flex items-center gap-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white";
-                btn.innerHTML = "▶ تشغيل الإيقاع";
-                clearInterval(seqInterval);
+            setMasterVolume(vol) {
+                if (this.masterGain && this.ctx) {
+                    this.masterGain.gain.setTargetAtTime(Math.max(0, Math.min(1, vol)), this.ctx.currentTime, 0.01);
+                }
+            }
+
+            setFilterCutoff(freq) {
+                if (this.filterNode && this.ctx) {
+                    this.filterNode.frequency.setTargetAtTime(Math.max(20, Math.min(20000, freq)), this.ctx.currentTime, 0.01);
+                }
+            }
+
+            playKick(time, vol = 1, pan = 0) {
+                this.init();
+                if (!this.ctx) return;
+                const t = time ?? this.ctx.currentTime;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                const panner = this.ctx.createStereoPanner ? this.ctx.createStereoPanner() : null;
+
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(150, t);
+                osc.frequency.exponentialRampToValueAtTime(30, t + 0.12);
+
+                gain.gain.setValueAtTime(1.0 * vol, t);
+                gain.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
+
+                if (panner) panner.pan.value = pan;
+
+                osc.connect(gain);
+                if (panner) { gain.connect(panner); panner.connect(this.masterGain); }
+                else { gain.connect(this.masterGain); }
+
+                osc.start(t);
+                osc.stop(t + 0.35);
+            }
+
+            playSnare(time, vol = 1, pan = 0) {
+                this.init();
+                if (!this.ctx || !this.noiseBuffer) return;
+                const t = time ?? this.ctx.currentTime;
+
+                const osc = this.ctx.createOscillator();
+                const oscGain = this.ctx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(180, t);
+                osc.frequency.exponentialRampToValueAtTime(80, t + 0.1);
+                oscGain.gain.setValueAtTime(0.5 * vol, t);
+                oscGain.gain.exponentialRampToValueAtTime(0.001, t + 0.15);
+
+                const noiseSource = this.ctx.createBufferSource();
+                noiseSource.buffer = this.noiseBuffer;
+                const noiseFilter = this.ctx.createBiquadFilter();
+                noiseFilter.type = 'highpass';
+                noiseFilter.frequency.value = 1000;
+                const noiseGain = this.ctx.createGain();
+                noiseGain.gain.setValueAtTime(0.8 * vol, t);
+                noiseGain.gain.exponentialRampToValueAtTime(0.001, t + 0.2);
+
+                const panner = this.ctx.createStereoPanner ? this.ctx.createStereoPanner() : null;
+                if (panner) panner.pan.value = pan;
+
+                osc.connect(oscGain);
+                if (panner) oscGain.connect(panner); else oscGain.connect(this.masterGain);
+
+                noiseSource.connect(noiseFilter);
+                noiseFilter.connect(noiseGain);
+                if (panner) { noiseGain.connect(panner); panner.connect(this.masterGain); }
+                else { noiseGain.connect(this.masterGain); }
+
+                osc.start(t);
+                osc.stop(t + 0.18);
+                noiseSource.start(t);
+                noiseSource.stop(t + 0.22);
+            }
+
+            playHiHat(time, vol = 1, pan = 0, open = false) {
+                this.init();
+                if (!this.ctx || !this.noiseBuffer) return;
+                const t = time ?? this.ctx.currentTime;
+                const duration = open ? 0.3 : 0.05;
+
+                const noiseSource = this.ctx.createBufferSource();
+                noiseSource.buffer = this.noiseBuffer;
+                const filter = this.ctx.createBiquadFilter();
+                filter.type = 'highpass';
+                filter.frequency.value = 7000;
+                const gain = this.ctx.createGain();
+                gain.gain.setValueAtTime(0.6 * vol, t);
+                gain.gain.exponentialRampToValueAtTime(0.001, t + duration);
+
+                const panner = this.ctx.createStereoPanner ? this.ctx.createStereoPanner() : null;
+                if (panner) panner.pan.value = pan;
+
+                noiseSource.connect(filter);
+                filter.connect(gain);
+                if (panner) { gain.connect(panner); panner.connect(this.masterGain); }
+                else { gain.connect(this.masterGain); }
+
+                noiseSource.start(t);
+                noiseSource.stop(t + duration + 0.02);
+            }
+
+            playClap(time, vol = 1, pan = 0) {
+                this.init();
+                if (!this.ctx || !this.noiseBuffer) return;
+                const t = time ?? this.ctx.currentTime;
+
+                const noiseSource = this.ctx.createBufferSource();
+                noiseSource.buffer = this.noiseBuffer;
+                const filter = this.ctx.createBiquadFilter();
+                filter.type = 'bandpass';
+                filter.frequency.value = 1200;
+                filter.Q.value = 3;
+
+                const gain = this.ctx.createGain();
+                gain.gain.setValueAtTime(0.01, t);
+                gain.gain.setValueAtTime(0.7 * vol, t + 0.01);
+                gain.gain.setValueAtTime(0.2 * vol, t + 0.02);
+                gain.gain.setValueAtTime(0.8 * vol, t + 0.03);
+                gain.gain.exponentialRampToValueAtTime(0.001, t + 0.25);
+
+                const panner = this.ctx.createStereoPanner ? this.ctx.createStereoPanner() : null;
+                if (panner) panner.pan.value = pan;
+
+                noiseSource.connect(filter);
+                filter.connect(gain);
+                if (panner) { gain.connect(panner); panner.connect(this.masterGain); }
+                else { gain.connect(this.masterGain); }
+
+                noiseSource.start(t);
+                noiseSource.stop(t + 0.28);
+            }
+
+            playSynthNote(freq, durationSeconds = 0.25, settings, time, vol = 1, pan = 0) {
+                this.init();
+                if (!this.ctx) return;
+                const t = time ?? this.ctx.currentTime;
+
+                const osc = this.ctx.createOscillator();
+                const filter = this.ctx.createBiquadFilter();
+                const envGain = this.ctx.createGain();
+                const panner = this.ctx.createStereoPanner ? this.ctx.createStereoPanner() : null;
+
+                osc.type = settings.waveform;
+                osc.frequency.setValueAtTime(freq, t);
+
+                filter.type = 'lowpass';
+                filter.frequency.setValueAtTime(settings.cutoff, t);
+                filter.Q.setValueAtTime(settings.resonance, t);
+
+                const attack = Math.max(0.005, settings.attack);
+                const decay = Math.max(0.005, settings.decay);
+                const sustainVol = Math.max(0.001, settings.sustain);
+                const release = Math.max(0.01, settings.release);
+
+                envGain.gain.setValueAtTime(0.0001, t);
+                envGain.gain.linearRampToValueAtTime(1.0 * vol, t + attack);
+                envGain.gain.exponentialRampToValueAtTime(sustainVol * vol, t + attack + decay);
+
+                const releaseStart = t + Math.max(attack + decay, durationSeconds);
+                envGain.gain.setValueAtTime(sustainVol * vol, releaseStart);
+                envGain.gain.exponentialRampToValueAtTime(0.0001, releaseStart + release);
+
+                if (panner) panner.pan.value = pan;
+
+                osc.connect(filter);
+                filter.connect(envGain);
+                if (panner) { envGain.connect(panner); panner.connect(this.masterGain); }
+                else { envGain.connect(this.masterGain); }
+
+                if (settings.delayTime > 0 && this.delayNode) {
+                    this.delayNode.delayTime.setValueAtTime(settings.delayTime, t);
+                    if (this.delayFeedbackGain) this.delayFeedbackGain.gain.setValueAtTime(settings.delayFeedback, t);
+                    const delaySendGain = this.ctx.createGain();
+                    delaySendGain.gain.value = 0.4;
+                    envGain.connect(delaySendGain);
+                    delaySendGain.connect(this.delayNode);
+                }
+
+                osc.start(t);
+                osc.stop(releaseStart + release + 0.1);
+            }
+
+            startSequencer(bpm, swing, tracks, pianoNotes, synthSettings, onStep) {
+                this.init();
+                if (this.isPlaying) this.stopSequencer();
+
+                this.isPlaying = true;
+                this.currentStep = 0;
+                this.tempo = bpm;
+                this.swing = swing;
+                this.nextStepTime = this.ctx.currentTime + 0.05;
+                this.onStepChangeCallbacks = [onStep];
+
+                const scheduler = () => {
+                    if (!this.isPlaying) return;
+                    while (this.nextStepTime < this.ctx.currentTime + this.scheduleAheadTime) {
+                        this.scheduleStep(this.currentStep, this.nextStepTime, tracks, pianoNotes, synthSettings);
+                        this.advanceStep();
+                    }
+                    this.timerId = window.setTimeout(scheduler, this.lookaheadMs);
+                };
+                scheduler();
+            }
+
+            stopSequencer() {
+                this.isPlaying = false;
+                if (this.timerId !== null) {
+                    clearTimeout(this.timerId);
+                    this.timerId = null;
+                }
+                this.currentStep = 0;
+            }
+
+            setTempo(bpm) { this.tempo = bpm; }
+            setSwing(swing) { this.swing = swing; }
+
+            advanceStep() {
+                const secondsPerBeat = 60.0 / this.tempo;
+                const stepDuration = secondsPerBeat / 4;
+                let currentStepDuration = stepDuration;
+                if (this.currentStep % 2 === 1 && this.swing > 0) {
+                    currentStepDuration += stepDuration * (this.swing * 0.33);
+                } else if (this.currentStep % 2 === 0 && this.swing > 0) {
+                    currentStepDuration -= stepDuration * (this.swing * 0.33);
+                }
+                this.nextStepTime += currentStepDuration;
+                this.currentStep = (this.currentStep + 1) % 16;
+            }
+
+            scheduleStep(step, time, tracks, pianoNotes, synthSettings) {
+                const delayMs = Math.max(0, (time - this.ctx.currentTime) * 1000);
+                setTimeout(() => {
+                    if (this.isPlaying) this.onStepChangeCallbacks.forEach(cb => cb(step));
+                }, delayMs);
+
+                const hasSolo = tracks.some(t => t.solo);
+
+                tracks.forEach(track => {
+                    if (track.muted) return;
+                    if (hasSolo && !track.solo) return;
+
+                    if (track.steps[step]) {
+                        const vol = track.volume;
+                        const pan = track.pan;
+                        switch (track.soundType) {
+                            case 'kick': this.playKick(time, vol, pan); break;
+                            case 'snare': this.playSnare(time, vol, pan); break;
+                            case 'hihat': this.playHiHat(time, vol, pan, step % 4 === 2); break;
+                            case 'clap': this.playClap(time, vol, pan); break;
+                            case 'bass':
+                                const bassFreq = NOTE_FREQUENCIES['C2'] || 65.41;
+                                this.playSynthNote(bassFreq, 0.2, { ...synthSettings, waveform: 'sawtooth', cutoff: 800 }, time, vol, pan);
+                                break;
+                        }
+                    }
+                });
+
+                pianoNotes.filter(n => n.step === step).forEach(note => {
+                    const freq = NOTE_FREQUENCIES[note.pitch];
+                    if (freq) {
+                        const secondsPerBeat = 60.0 / this.tempo;
+                        const stepDuration = secondsPerBeat / 4;
+                        const noteDuration = note.length * stepDuration;
+                        this.playSynthNote(freq, noteDuration, synthSettings, time, 0.9, 0);
+                    }
+                });
+            }
+
+            startRecording() {
+                this.init();
+                if (!this.destinationNode) return;
+                this.recordedChunks = [];
+                const stream = this.destinationNode.stream;
+                this.mediaRecorder = new MediaRecorder(stream);
+                this.mediaRecorder.ondataavailable = (event) => {
+                    if (event.data.size > 0) this.recordedChunks.push(event.data);
+                };
+                this.mediaRecorder.start();
+            }
+
+            stopRecordingAndDownload(filename = 'SAFESTAR_Studio_Track.webm') {
+                if (!this.mediaRecorder) return;
+                this.mediaRecorder.onstop = () => {
+                    const blob = new Blob(this.recordedChunks, { type: 'audio/webm' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = filename;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                };
+                this.mediaRecorder.stop();
             }
         }
 
-        function renderSequencerGrid() {
-            renderTrack('kick', state.kickSteps, 'bg-amber-500');
-            renderTrack('snare', state.snareSteps, 'bg-purple-600');
-            renderTrack('hihat', state.hihatSteps, 'bg-indigo-500');
-        }
+        const audioEngine = new AudioEngine();
 
-        function renderTrack(name, steps, cls) {
-            document.getElementById(`track-${name}`).innerHTML = steps.map((active, idx) => `
-                <button onclick="toggleStep('${name}', ${idx})" class="h-10 rounded-xl transition ${state.currentStep === idx && state.isPlayingSeq ? 'ring-2 ring-amber-400' : ''} ${active ? cls : 'bg-slate-900 border border-slate-800'}"></button>
-            `).join('');
-        }
+        // --- 2. PRESETS ---
+        const defaultTracks = [
+            { id: 'kick', name: 'Kick Drum', type: 'drum', soundType: 'kick', color: '#ef4444', muted: false, solo: false, volume: 0.9, pan: 0, steps: [true, false, false, false, true, false, false, false, true, false, false, false, true, false, false, false] },
+            { id: 'snare', name: 'Snare / Clap', type: 'drum', soundType: 'snare', color: '#3b82f6', muted: false, solo: false, volume: 0.85, pan: 0, steps: [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false] },
+            { id: 'hihat', name: 'Hi-Hat (16th)', type: 'drum', soundType: 'hihat', color: '#eab308', muted: false, solo: false, volume: 0.7, pan: 0.1, steps: [true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false] },
+            { id: 'clap', name: 'Hand Clap', type: 'drum', soundType: 'clap', color: '#ec4899', muted: false, solo: false, volume: 0.8, pan: -0.1, steps: [false, false, false, false, true, false, false, true, false, false, false, false, true, false, true, false] },
+            { id: 'bass', name: 'Synth Bass', type: 'drum', soundType: 'bass', color: '#8b5cf6', muted: false, solo: false, volume: 0.85, pan: 0, steps: [true, false, false, true, false, false, true, false, true, false, false, false, false, true, false, false] },
+        ];
 
-        function toggleStep(track, idx) {
-            if (track === 'kick') state.kickSteps[idx] = !state.kickSteps[idx];
-            if (track === 'snare') state.snareSteps[idx] = !state.snareSteps[idx];
-            if (track === 'hihat') state.hihatSteps[idx] = !state.hihatSteps[idx];
-            renderSequencerGrid();
-        }
+        const synthwaveMelody = [
+            { id: '1', pitch: 'C4', step: 0, length: 2 }, { id: '2', pitch: 'D#4', step: 2, length: 2 },
+            { id: '3', pitch: 'G4', step: 4, length: 2 }, { id: '4', pitch: 'A#4', step: 6, length: 2 },
+            { id: '5', pitch: 'G4', step: 8, length: 2 }, { id: '6', pitch: 'D#4', step: 10, length: 2 },
+            { id: '7', pitch: 'F4', step: 12, length: 2 }, { id: '8', pitch: 'D4', step: 14, length: 2 },
+        ];
 
-        function openPricingModal() {
-            document.getElementById('pricing-modal').classList.remove('hidden');
-            renderPlansModal();
-            renderPayPalButton();
-        }
+        const PRESETS = [
+            { id: 'synthwave', name: '🌆 Synthwave / Cyberpunk', bpm: 120, tracks: defaultTracks, pianoNotes: synthwaveMelody },
+            { id: 'house', name: '🪩 4-on-the-Floor House', bpm: 126, tracks: defaultTracks, pianoNotes: synthwaveMelody }
+        ];
 
-        function closePricingModal() {
-            document.getElementById('pricing-modal').classList.add('hidden');
-        }
-
-        function renderPlansModal() {
-            document.getElementById('plans-grid').innerHTML = SUBSCRIPTION_PLANS.map(plan => {
-                const isSelected = state.selectedPlan.id === plan.id;
-                return `
-                    <div onclick="selectPlan('${plan.id}')" class="p-6 rounded-3xl border transition-all cursor-pointer space-y-4 ${isSelected ? 'bg-slate-950 border-amber-400 ring-2 ring-amber-400' : 'bg-slate-950/60 border-slate-800'}">
-                        <h3 class="font-bold text-white">${plan.name}</h3>
-                        <div class="text-3xl font-extrabold text-amber-300">$${plan.price} / ${plan.period}</div>
+        // --- 3. COMPONENTS ---
+        const Header = ({ project, isPlaying, isRecording, onPlayToggle, onStop, onRecordToggle, onBpmChange, onMasterVolumeChange, onTabChange, onLoadPreset, onSaveProject, onLoadProject }) => (
+            <header className="w-full bg-slate-900 border-b border-slate-800 text-slate-100 p-3 flex flex-wrap items-center justify-between gap-4 shadow-xl select-none rounded-2xl">
+                <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-lg bg-gradient-to-tr from-cyan-500 via-blue-600 to-indigo-600 flex items-center justify-center font-black text-lg text-white shadow-lg">S</div>
+                    <div>
+                        <h1 className="font-bold text-lg leading-none tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-indigo-300">SAFESTAR STUDIO</h1>
+                        <p className="text-[10px] text-slate-400 font-mono uppercase tracking-widest mt-0.5">Web DAW Engine v1.0</p>
                     </div>
-                `;
-            }).join('');
-            document.getElementById('modal-selected-plan-name').innerText = state.selectedPlan.name;
-            document.getElementById('modal-selected-plan-price').innerText = `$${state.selectedPlan.price} USD`;
-        }
+                </div>
 
-        function selectPlan(id) {
-            state.selectedPlan = SUBSCRIPTION_PLANS.find(p => p.id === id) || SUBSCRIPTION_PLANS[1];
-            renderPlansModal();
-            renderPayPalButton();
-        }
+                <div className="flex items-center gap-2 bg-slate-950/80 p-1.5 rounded-xl border border-slate-800">
+                    <button onClick={onPlayToggle} className={`px-4 py-2 rounded-lg font-semibold flex items-center gap-2 text-xs transition-all ${isPlaying ? 'bg-amber-500 text-slate-950' : 'bg-emerald-500 text-slate-950'}`}>
+                        {isPlaying ? 'PAUSE' : 'PLAY'}
+                    </button>
+                    <button onClick={onStop} className="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300">⏹</button>
+                    <button onClick={onRecordToggle} className={`px-3 py-2 rounded-lg font-medium flex items-center gap-2 text-xs ${isRecording ? 'bg-red-600 text-white animate-pulse' : 'bg-slate-800 text-slate-300'}`}>
+                        {isRecording ? 'REC...' : 'REC'}
+                    </button>
+                    <div className="h-6 w-[1px] bg-slate-800 mx-1" />
+                    <div className="flex items-center gap-2 px-2">
+                        <span className="text-[11px] font-mono text-slate-400">BPM</span>
+                        <input type="number" min="60" max="200" value={project.bpm} onChange={(e) => onBpmChange(Number(e.target.value))} className="w-16 bg-slate-900 border border-slate-700 rounded px-2 py-1 text-xs text-center font-mono font-bold text-cyan-400 focus:outline-none" />
+                    </div>
+                </div>
 
-        // --- ربط حقيقي بزِر PayPal الرسمي (يتحقق من الرصيد والبطاقة الحقيقية) ---
-        function renderPayPalButton() {
-            const container = document.getElementById('paypal-button-container');
-            container.innerHTML = ""; // إعادة تعيين الزر بناءً على السعر الحالي
-            
-            paypal.Buttons({
-                createOrder: function(data, actions) {
-                    return actions.order.create({
-                        purchase_units: [{
-                            amount: { value: state.selectedPlan.price }
-                        }]
-                    });
-                },
-                onApprove: function(data, actions) {
-                    return actions.order.capture().then(function(details) {
-                        state.activeSubscription = state.selectedPlan;
-                        document.getElementById('paypal-success-box').classList.remove('hidden');
-                        document.getElementById('header-subscription-status').innerHTML = `
-                            <div class="px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold">
-                                ✅ تم الدفع بنجاح بواسطة ${details.payer.name.given_name}
+                <div className="flex items-center bg-slate-950/80 p-1 rounded-xl border border-slate-800 gap-1">
+                    <button onClick={() => onTabChange('sequencer')} className={`px-3 py-1.5 rounded-lg text-xs font-semibold ${project.activeTab === 'sequencer' ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/40' : 'text-slate-400'}`}>Sequencer</button>
+                    <button onClick={() => onTabChange('pianoroll')} className={`px-3 py-1.5 rounded-lg text-xs font-semibold ${project.activeTab === 'pianoroll' ? 'bg-indigo-500/20 text-indigo-400 border border-indigo-500/40' : 'text-slate-400'}`}>Piano Roll</button>
+                    <button onClick={() => onTabChange('synth')} className={`px-3 py-1.5 rounded-lg text-xs font-semibold ${project.activeTab === 'synth' ? 'bg-purple-500/20 text-purple-400 border border-purple-500/40' : 'text-slate-400'}`}>Synth Lab</button>
+                </div>
+
+                <div className="flex items-center gap-2">
+                    <select onChange={(e) => onLoadPreset(e.target.value)} defaultValue="" className="bg-slate-950 border border-slate-700 text-slate-200 text-xs rounded-lg px-2 py-1.5">
+                        <option value="" disabled>📂 Load Preset...</option>
+                        {PRESETS.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
+                    </select>
+                    <button onClick={onSaveProject} className="p-2 rounded-lg bg-slate-800 text-slate-300" title="Save">💾</button>
+                    <button onClick={onLoadProject} className="p-2 rounded-lg bg-slate-800 text-slate-300" title="Load">📂</button>
+                </div>
+            </header>
+        );
+
+        const ChannelRack = ({ tracks, currentStep, isPlaying, onStepToggle, onTrackVolumeChange, onTrackPanChange, onTrackMuteToggle, onTrackSoloToggle, onClearPattern, onRandomizePattern, onAddTrack }) => (
+            <div className="w-full bg-slate-950 p-4 rounded-2xl border border-slate-800 shadow-2xl flex flex-col gap-4">
+                <div className="flex items-center justify-between bg-slate-900/80 px-4 py-2.5 rounded-xl border border-slate-800">
+                    <span className="text-xs font-bold uppercase tracking-wider text-slate-300 font-mono">Channel Rack / Sequencer</span>
+                    <div className="flex items-center gap-2">
+                        <button onClick={onRandomizePattern} className="px-3 py-1.5 rounded-lg bg-indigo-600/20 text-indigo-300 border border-indigo-500/30 text-xs">✨ Randomize</button>
+                        <button onClick={onClearPattern} className="px-3 py-1.5 rounded-lg bg-rose-600/20 text-rose-300 border border-rose-500/30 text-xs">🗑️ Clear</button>
+                        <button onClick={onAddTrack} className="px-3 py-1.5 rounded-lg bg-cyan-600/20 text-cyan-300 border border-cyan-500/30 text-xs">➕ Add Track</button>
+                    </div>
+                </div>
+
+                <div className="flex flex-col gap-2 overflow-x-auto pb-2">
+                    <div className="flex items-center gap-2 pl-64 pr-2">
+                        {Array.from({ length: 16 }).map((_, i) => (
+                            <div key={i} className={`flex-1 text-center font-mono text-[11px] font-bold py-1 rounded ${isPlaying && currentStep === i ? 'bg-cyan-500 text-slate-950' : 'text-slate-500 bg-slate-900/60'}`}>{i + 1}</div>
+                        ))}
+                    </div>
+
+                    {tracks.map((track) => (
+                        <div key={track.id} className="flex items-center gap-3 bg-slate-900/60 p-2 rounded-xl border border-slate-800/80">
+                            <div className="w-60 shrink-0 flex items-center gap-2">
+                                <div className="w-3 h-8 rounded-md shrink-0" style={{ backgroundColor: track.color }} />
+                                <div className="flex-1 min-w-0">
+                                    <p className="text-xs font-bold text-slate-200 truncate">{track.name}</p>
+                                    <div className="flex items-center gap-2 mt-1">
+                                        <input type="range" min="0" max="1" step="0.05" value={track.volume} onChange={(e) => onTrackVolumeChange(track.id, Number(e.target.value))} className="w-12 h-1 accent-cyan-500" />
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-1">
+                                    <button onClick={() => onTrackMuteToggle(track.id)} className={`w-6 h-6 rounded text-[10px] font-bold ${track.muted ? 'bg-red-500/20 text-red-400' : 'bg-slate-800 text-slate-400'}`}>M</button>
+                                    <button onClick={() => onTrackSoloToggle(track.id)} className={`w-6 h-6 rounded text-[10px] font-bold ${track.solo ? 'bg-amber-500/20 text-amber-400' : 'bg-slate-800 text-slate-400'}`}>S</button>
+                                </div>
                             </div>
-                        `;
-                        const banner = document.getElementById('subscription-banner');
-                        if (banner) banner.classList.add('hidden');
 
-                        setTimeout(() => {
-                            closePricingModal();
-                            document.getElementById('paypal-success-box').classList.add('hidden');
-                        }, 2000);
-                    });
-                },
-                onError: function(err) {
-                    alert("فشلت عملية الدفع لعدم توفر رصيد كافٍ أو حدوث مشكلة في البطاقة عبر PayPal.");
+                            <div className="flex-1 flex items-center gap-2">
+                                {track.steps.map((active, stepIdx) => {
+                                    const isCurrent = isPlaying && currentStep === stepIdx;
+                                    return (
+                                        <button key={stepIdx} onClick={() => onStepToggle(track.id, stepIdx)} className={`flex-1 h-9 rounded-lg border transition-all ${active ? 'border-transparent shadow-md' : 'bg-slate-950 border-slate-800'}`} style={{ backgroundColor: active ? track.color : undefined }}>
+                                            <span className={`block w-1.5 h-1.5 rounded-full mx-auto ${active ? 'bg-white' : 'bg-slate-700/50'}`} />
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        );
+
+        const PianoRoll = ({ notes, currentStep, isPlaying, synthSettings, onNotesChange }) => {
+            const handleCellClick = (pitch, step) => {
+                const existing = notes.find((n) => n.pitch === pitch && n.step === step);
+                if (existing) {
+                    onNotesChange(notes.filter((n) => n.id !== existing.id));
+                } else {
+                    onNotesChange([...notes, { id: Math.random().toString(36).substring(2, 9), pitch, step, length: 1 }]);
+                    const NOTE_FREQS = { 'C4': 261.63, 'D4': 293.66, 'E4': 329.63, 'F4': 349.23, 'G4': 392.00, 'A4': 440.00, 'B4': 493.88, 'C5': 523.25 };
+                    audioEngine.playSynthNote(NOTE_FREQS[pitch] || 261.63, 0.25, synthSettings);
                 }
-            }).render('#paypal-button-container');
+            };
+
+            return (
+                <div className="w-full bg-slate-950 p-4 rounded-2xl border border-slate-800 shadow-2xl flex flex-col gap-4">
+                    <div className="flex items-center justify-between bg-slate-900/80 px-4 py-2.5 rounded-xl border border-slate-800">
+                        <span className="text-xs font-bold uppercase tracking-wider text-slate-300 font-mono">Piano Roll Grid</span>
+                        <button onClick={() => onNotesChange([])} className="px-3 py-1.5 rounded-lg bg-rose-600/20 text-rose-300 text-xs">🗑️ Clear Notes</button>
+                    </div>
+
+                    <div className="overflow-x-auto max-h-[480px] overflow-y-auto border border-slate-800 rounded-xl bg-slate-900/40">
+                        <div className="inline-block min-w-full align-middle">
+                            <div className="flex border-b border-slate-800 sticky top-0 bg-slate-900 z-10">
+                                <div className="w-20 shrink-0 p-2 text-[10px] font-mono font-bold text-slate-400 border-r border-slate-800 text-center bg-slate-950">KEY</div>
+                                {Array.from({ length: 16 }).map((_, stepIdx) => (
+                                    <div key={stepIdx} className={`w-12 shrink-0 py-1.5 text-center font-mono text-[10px] font-bold border-r border-slate-800/60 ${isPlaying && currentStep === stepIdx ? 'bg-indigo-500 text-slate-950' : 'text-slate-500'}`}>{stepIdx + 1}</div>
+                                ))}
+                            </div>
+                            {NOTE_LIST.map((pitch) => (
+                                <div key={pitch} className="flex border-b border-slate-800/40">
+                                    <div className="w-20 shrink-0 px-2 py-1 text-xs font-mono font-bold border-r border-slate-800 bg-slate-900 text-slate-200 flex items-center justify-between"><span>{pitch}</span></div>
+                                    {Array.from({ length: 16 }).map((_, stepIdx) => {
+                                        const hasNote = notes.some((n) => n.pitch === pitch && n.step === stepIdx);
+                                        const isCurrent = isPlaying && currentStep === stepIdx;
+                                        return (
+                                            <button key={stepIdx} onClick={() => handleCellClick(pitch, stepIdx)} className={`w-12 h-7 shrink-0 border-r border-slate-800/40 relative ${isCurrent ? 'bg-indigo-500/10' : ''}`}>
+                                                {hasNote && <div className="absolute inset-0.5 rounded-md bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-[9px] font-bold flex items-center justify-center">{pitch}</div>}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const SynthControls = ({ settings, onSettingsChange }) => {
+            const updateField = (field, value) => {
+                onSettingsChange({ ...settings, [field]: value });
+            };
+
+            return (
+                <div className="w-full bg-slate-950 p-4 rounded-2xl border border-slate-800 shadow-2xl flex flex-col gap-6">
+                    <div className="flex items-center justify-between bg-slate-900/80 px-4 py-2.5 rounded-xl border border-slate-800">
+                        <span className="text-xs font-bold uppercase tracking-wider text-slate-300 font-mono">Synthesizer Lab</span>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="bg-slate-900/60 p-4 rounded-xl border border-slate-800 flex flex-col gap-3">
+                            <h3 className="text-xs font-bold text-slate-200 uppercase">1. Oscillator Waveform</h3>
+                            <div className="grid grid-cols-2 gap-2">
+                                {['sawtooth', 'square', 'sine', 'triangle'].map((wave) => (
+                                    <button key={wave} onClick={() => updateField('waveform', wave)} className={`py-2 px-3 rounded-lg text-xs font-mono font-bold capitalize border ${settings.waveform === wave ? 'bg-purple-600 text-white border-purple-400' : 'bg-slate-950 text-slate-400 border-slate-800'}`}>{wave}</button>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div className="bg-slate-900/60 p-4 rounded-xl border border-slate-800 flex flex-col gap-3">
+                            <h3 className="text-xs font-bold text-slate-200 uppercase">2. Lowpass Filter Cutoff</h3>
+                            <input type="range" min="100" max="12000" step="50" value={settings.cutoff} onChange={(e) => updateField('cutoff', Number(e.target.value))} className="w-full accent-purple-500" />
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // --- 4. MAIN APP COMPONENT ---
+        const defaultSynthSettings = {
+            waveform: 'sawtooth', attack: 0.01, decay: 0.2, sustain: 0.6, release: 0.3, cutoff: 4000, resonance: 2.5, delayTime: 0.25, delayFeedback: 0.3, reverbMix: 0.2,
+        };
+
+        function App() {
+            const [project, setProject] = useState({
+                name: 'SAFESTAR Project 1',
+                bpm: PRESETS[0].bpm,
+                swing: 0,
+                masterVolume: 0.8,
+                activeTab: 'sequencer',
+                synthSettings: defaultSynthSettings,
+                tracks: PRESETS[0].tracks,
+                pianoNotes: PRESETS[0].pianoNotes,
+            });
+
+            const [isPlaying, setIsPlaying] = useState(false);
+            const [isRecording, setIsRecording] = useState(false);
+            const [currentStep, setCurrentStep] = useState(0);
+
+            const handlePlayToggle = () => {
+                if (isPlaying) {
+                    audioEngine.stopSequencer();
+                    setIsPlaying(false);
+                } else {
+                    audioEngine.startSequencer(project.bpm, project.swing, project.tracks, project.pianoNotes, project.synthSettings, (step) => setCurrentStep(step));
+                    setIsPlaying(true);
+                }
+            };
+
+            const handleStop = () => {
+                audioEngine.stopSequencer();
+                setIsPlaying(false);
+                setCurrentStep(0);
+            };
+
+            const handleRecordToggle = () => {
+                if (!isRecording) {
+                    audioEngine.startRecording();
+                    setIsRecording(true);
+                } else {
+                    audioEngine.stopRecordingAndDownload(`SAFESTAR_${project.name}.webm`);
+                    setIsRecording(false);
+                }
+            };
+
+            const handleBpmChange = (newBpm) => {
+                const bpm = Math.max(60, Math.min(200, newBpm));
+                setProject((prev) => ({ ...prev, bpm }));
+                audioEngine.setTempo(bpm);
+            };
+
+            const handleMasterVolumeChange = (vol) => {
+                setProject((prev) => ({ ...prev, masterVolume: vol }));
+                audioEngine.setMasterVolume(vol);
+            };
+
+            const handleLoadPreset = (presetId) => {
+                const preset = PRESETS.find((p) => p.id === presetId);
+                if (!preset) return;
+                if (isPlaying) { audioEngine.stopSequencer(); setIsPlaying(false); }
+                setProject((prev) => ({ ...prev, bpm: preset.bpm, tracks: preset.tracks, pianoNotes: preset.pianoNotes }));
+            };
+
+            const handleSaveProject = () => {
+                localStorage.setItem('SAFESTAR_DAW_PROJECT', JSON.stringify(project));
+                alert('Project saved successfully!');
+            };
+
+            const handleLoadProject = () => {
+                const saved = localStorage.getItem('SAFESTAR_DAW_PROJECT');
+                if (saved) {
+                    const loaded = JSON.parse(saved);
+                    if (isPlaying) { audioEngine.stopSequencer(); setIsPlaying(false); }
+                    setProject(loaded);
+                    audioEngine.setTempo(loaded.bpm);
+                    audioEngine.setMasterVolume(loaded.masterVolume);
+                    alert('Project loaded!');
+                } else {
+                    alert('No saved project found.');
+                }
+            };
+
+            const handleStepToggle = (trackId, stepIndex) => {
+                setProject((prev) => ({
+                    ...prev,
+                    tracks: prev.tracks.map((t) => t.id === trackId ? { ...t, steps: t.steps.map((s, idx) => idx === stepIndex ? !s : s) } : t),
+                }));
+            };
+
+            const handleTrackVolumeChange = (trackId, vol) => {
+                setProject((prev) => ({ ...prev, tracks: prev.tracks.map((t) => t.id === trackId ? { ...t, volume: vol } : t) }));
+            };
+
+            const handleTrackPanChange = (trackId, pan) => {
+                setProject((prev) => ({ ...prev, tracks: prev.tracks.map((t) => t.id === trackId ? { ...t, pan } : t) }));
+            };
+
+            const handleTrackMuteToggle = (trackId) => {
+                setProject((prev) => ({ ...prev, tracks: prev.tracks.map((t) => t.id === trackId ? { ...t, muted: !t.muted } : t) }));
+            };
+
+            const handleTrackSoloToggle = (trackId) => {
+                setProject((prev) => ({ ...prev, tracks: prev.tracks.map((t) => t.id === trackId ? { ...t, solo: !t.solo } : t) }));
+            };
+
+            const handleClearPattern = () => {
+                setProject((prev) => ({ ...prev, tracks: prev.tracks.map((t) => ({ ...t, steps: Array(16).fill(false) })) }));
+            };
+
+            const handleRandomizePattern = () => {
+                setProject((prev) => ({ ...prev, tracks: prev.tracks.map((t) => ({ ...t, steps: Array(16).fill(false).map(() => Math.random() > 0.65) })) }));
+            };
+
+            const handleAddTrack = () => {
+                const sounds = ['kick', 'snare', 'hihat', 'clap', 'bass'];
+                const colors = ['#06b6d4', '#8b5cf6', '#f59e0b', '#10b981', '#f43f5e'];
+                const newTrack = {
+                    id: Math.random().toString(36).substring(2, 9),
+                    name: `Percussion ${project.tracks.length + 1}`,
+                    type: 'drum',
+                    soundType: sounds[Math.floor(Math.random() * sounds.length)],
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    muted: false, solo: false, volume: 0.8, pan: 0, steps: Array(16).fill(false),
+                };
+                setProject((prev) => ({ ...prev, tracks: [...prev.tracks, newTrack] }));
+            };
+
+            return (
+                <div className="w-full flex flex-col gap-6">
+                    <Header
+                        project={project}
+                        isPlaying={isPlaying}
+                        isRecording={isRecording}
+                        onPlayToggle={handlePlayToggle}
+                        onStop={handleStop}
+                        onRecordToggle={handleRecordToggle}
+                        onBpmChange={handleBpmChange}
+                        onMasterVolumeChange={handleMasterVolumeChange}
+                        onTabChange={(tab) => setProject((prev) => ({ ...prev, activeTab: tab }))}
+                        onLoadPreset={handleLoadPreset}
+                        onSaveProject={handleSaveProject}
+                        onLoadProject={handleLoadProject}
+                    />
+
+                    <main className="w-full">
+                        {project.activeTab === 'sequencer' && (
+                            <ChannelRack
+                                tracks={project.tracks}
+                                currentStep={currentStep}
+                                isPlaying={isPlaying}
+                                onStepToggle={handleStepToggle}
+                                onTrackVolumeChange={handleTrackVolumeChange}
+                                onTrackPanChange={handleTrackPanChange}
+                                onTrackMuteToggle={handleTrackMuteToggle}
+                                onTrackSoloToggle={handleTrackSoloToggle}
+                                onClearPattern={handleClearPattern}
+                                onRandomizePattern={handleRandomizePattern}
+                                onAddTrack={handleAddTrack}
+                            />
+                        )}
+
+                        {project.activeTab === 'pianoroll' && (
+                            <PianoRoll
+                                notes={project.pianoNotes}
+                                currentStep={currentStep}
+                                isPlaying={isPlaying}
+                                synthSettings={project.synthSettings}
+                                onNotesChange={(notes) => setProject((prev) => ({ ...prev, pianoNotes: notes }))}
+                            />
+                        )}
+
+                        {project.activeTab === 'synth' && (
+                            <SynthControls
+                                settings={project.synthSettings}
+                                onSettingsChange={(synthSettings) => setProject((prev) => ({ ...prev, synthSettings }))}
+                            />
+                        )}
+                    </main>
+
+                    <footer className="w-full flex items-center justify-between text-[11px] font-mono text-slate-500 border-t border-slate-900 pt-3">
+                        <span>SAFESTAR DAW Studio Engine • Web Audio API Synthesis</span>
+                        <span>Status: {isPlaying ? '🟢 PLAYING' : '⏹️ READY'}</span>
+                    </footer>
+                </div>
+            );
         }
 
-        initPianoKeyboard();
-        renderChordProgressions();
-        renderSequencerGrid();
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
     </script>
 </body>
 </html>
