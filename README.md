@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ar" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAFESTAR • Web DAW Studio Pro</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        slate: { 950: '#020617', 900: '#0f172a', 850: '#172033', 800: '#1e293b', 700: '#334155', 400: '#94a3b8', 300: '#cbd5e1', 100: '#f1f5f9' },
+                        cyan: { 500: '#06b6d4', 400: '#22d3ee' },
+                        indigo: { 600: '#4f46e5', 500: '#6366f1', 400: '#818cf8' },
+                        purple: { 600: '#9333ea', 500: '#a855f7' }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="min-h-screen w-full flex flex-col items-center justify-start bg-slate-950 p-3 md:p-6 text-slate-100 font-sans select-none antialiased">
+
+    <div class="w-full max-w-6xl flex flex-col gap-6">
+        <!-- Header -->
+        <header class="w-full bg-slate-900 border border-slate-800 text-slate-100 p-4 flex flex-wrap items-center justify-between gap-4 shadow-xl rounded-2xl">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center font-black text-lg text-white shadow-lg">S</div>
+                <div>
+                    <h1 class="font-bold text-lg leading-none text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-indigo-300">SAFESTAR STUDIO</h1>
+                    <p class="text-[10px] text-slate-400 font-mono uppercase tracking-widest mt-0.5">Web DAW Engine v1.0</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3 bg-slate-950 p-2 rounded-xl border border-slate-800">
+                <button id="play-btn" onclick="togglePlay()" class="px-5 py-2 rounded-lg font-bold text-xs bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-lg transition">PLAY</button>
+                <button onclick="stopAudio()" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300">⏹</button>
+                <div class="h-6 w-[1px] bg-slate-800 mx-1"></div>
+                <div class="flex items-center gap-2 px-2">
+                    <span class="text-[11px] font-mono text-slate-400">BPM</span>
+                    <input type="number" id="bpm-input" value="120" min="60" max="200" onchange="changeBpm(this.value)" class="w-16 bg-slate-900 border border-slate-700 rounded px-2 py-1 text-xs text-center font-mono font-bold text-cyan-400 focus:outline-none" />
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Channel Rack (Sequencer) -->
+        <main class="w-full bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-2xl flex flex-col gap-6">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                <h2 class="text-sm font-bold font-mono uppercase tracking-wider text-slate-200">🎵 16-Step Drum Sequencer & Audio Engine</h2>
+                <button onclick="randomizeSteps()" class="px-3 py-1.5 rounded-lg bg-indigo-600/20 text-indigo-300 border border-indigo-500/30 text-xs font-bold hover:bg-indigo-600/30 transition">✨ Randomize Beat</button>
+            </div>
+
+            <div id="tracks-container" class="flex flex-col gap-3">
+                <!-- Tracks will be injected by JavaScript -->
+            </div>
+        </main>
+
+        <footer class="w-full flex items-center justify-between text-[11px] font-mono text-slate-500 border-t border-slate-900 pt-3">
+            <span>SAFESTAR DAW Studio Engine • Web Audio API</span>
+            <span id="status-text">Status: ⏹️ READY</span>
+        </footer>
+    </div>
+
+    <!-- Audio Engine & UI Logic -->
+    <script>
+        let audioCtx = null;
+        let isPlaying = false;
+        let currentStep = 0;
+        let timerId = null;
+        let bpm = 120;
+
+        const tracksData = [
+            { id: 'kick', name: 'Kick Drum', color: '#ef4444', sound: 'kick', steps: [true, false, false, false, true, false, false, false, true, false, false, false, true, false, false, false] },
+            { id: 'snare', name: 'Snare Drum', color: '#3b82f6', sound: 'snare', steps: [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false] },
+            { id: 'hihat', name: 'Hi-Hat', color: '#eab308', sound: 'hihat', steps: [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true] },
+            { id: 'clap', name: 'Hand Clap', color: '#ec4899', sound: 'clap', steps: [false, false, false, false, true, false, false, true, false, false, false, false, true, false, true, false] }
+        ];
+
+        function initAudio() {
+            if (!audioCtx) {
+                const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+                audioCtx = new AudioContextClass();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        function playSound(type, time = 0) {
+            initAudio();
+            const t = time || audioCtx.currentTime;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            if (type === 'kick') {
+                osc.frequency.setValueAtTime(150, t);
+                osc.frequency.exponentialRampToValueAtTime(30, t + 0.12);
+                gain.gain.setValueAtTime(1.0, t);
+                gain.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
+                osc.start(t);
+                osc.stop(t + 0.35);
+            } else if (type === 'snare' || type === 'hihat' || type === 'clap') {
+                const bufferSize = audioCtx.sampleRate * 0.1;
+                const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                const data = buffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+                
+                const noise = audioCtx.createBufferSource();
+                noise.buffer = buffer;
+                const filter = audioCtx.createBiquadFilter();
+                filter.type = type === 'hihat' ? 'highpass' : 'bandpass';
+                filter.frequency.value = type === 'hihat' ? 7000 : 1200;
+
+                noise.connect(filter);
+                filter.connect(gain);
+                gain.gain.setValueAtTime(0.5, t);
+                gain.gain.exponentialRampToValueAtTime(0.001, t + (type === 'hihat' ? 0.05 : 0.2));
+                noise.start(t);
+            }
+        }
+
+        function renderTracks() {
+            const container = document.getElementById('tracks-container');
+            container.innerHTML = tracksData.map(track => `
+                <div class="flex items-center gap-3 bg-slate-950 p-3 rounded-xl border border-slate-800">
+                    <div class="w-32 flex items-center gap-2">
+                        <div class="w-3 h-6 rounded" style="background-color: ${track.color}"></div>
+                        <span class="text-xs font-bold text-slate-200">${track.name}</span>
+                    </div>
+                    <div class="flex-1 grid grid-cols-16 gap-1.5">
+                        ${track.steps.map((active, idx) => `
+                            <button onclick="toggleStep('${track.id}', ${idx})" 
+                                class="h-9 rounded-lg border transition-all ${active ? 'border-transparent shadow-md' : 'bg-slate-900 border-slate-800'} ${isPlaying && currentStep === idx ? 'ring-2 ring-cyan-400' : ''}"
+                                style="background-color: ${active ? track.color : ''}">
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleStep(trackId, stepIdx) {
+            const track = tracksData.find(t => t.id === trackId);
+            if (track) {
+                track.steps[stepIdx] = !track.steps[stepIdx];
+                renderTracks();
+            }
+        }
+
+        function togglePlay() {
+            initAudio();
+            isPlaying = !isPlaying;
+            const btn = document.getElementById('play-btn');
+            const status = document.getElementById('status-text');
+
+            if (isPlaying) {
+                btn.innerText = "PAUSE";
+                btn.className = "px-5 py-2 rounded-lg font-bold text-xs bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-lg transition";
+                status.innerText = "Status: 🟢 PLAYING";
+                startSequencer();
+            } else {
+                btn.innerText = "PLAY";
+                btn.className = "px-5 py-2 rounded-lg font-bold text-xs bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-lg transition";
+                status.innerText = "Status: ⏹️ READY";
+                clearInterval(timerId);
+            }
+        }
+
+        function stopAudio() {
+            if (isPlaying) togglePlay();
+            currentStep = 0;
+            renderTracks();
+        }
+
+        function changeBpm(val) {
+            bpm = Number(val);
+            if (isPlaying) {
+                clearInterval(timerId);
+                startSequencer();
+            }
+        }
+
+        function startSequencer() {
+            const intervalTime = (60 / bpm / 4) * 1000;
+            timerId = setInterval(() => {
+                tracksData.forEach(track => {
+                    if (track.steps[currentStep]) {
+                        playSound(track.sound);
+                    }
+                });
+                currentStep = (currentStep + 1) % 16;
+                renderTracks();
+            }, intervalTime);
+        }
+
+        function randomizeSteps() {
+            tracksData.forEach(track => {
+                track.steps = track.steps.map(() => Math.random() > 0.6);
+            });
+            renderTracks();
+        }
+
+        // Initial Render
+        renderTracks();
+    </script>
+</body>
+</html>
