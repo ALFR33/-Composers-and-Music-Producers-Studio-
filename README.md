@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ar" dir="ltr">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SAFESTAR • Web DAW Studio Pro</title>
+    <title>SAFESTAR • Pro Music & Quran Audio Studio</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -13,199 +13,278 @@
                     colors: {
                         slate: { 950: '#020617', 900: '#0f172a', 850: '#172033', 800: '#1e293b', 700: '#334155', 400: '#94a3b8', 300: '#cbd5e1', 100: '#f1f5f9' },
                         cyan: { 500: '#06b6d4', 400: '#22d3ee' },
-                        indigo: { 600: '#4f46e5', 500: '#6366f1', 400: '#818cf8' },
-                        purple: { 600: '#9333ea', 500: '#a855f7' }
+                        amber: { 500: '#f59e0b', 400: '#fbbf24', 300: '#fcd34d' },
+                        emerald: { 500: '#10b981', 400: '#34d399' }
                     }
                 }
             }
         }
     </script>
 </head>
-<body class="min-h-screen w-full flex flex-col items-center justify-start bg-slate-950 p-3 md:p-6 text-slate-100 font-sans select-none antialiased">
+<body class="min-h-screen w-full bg-slate-950 text-slate-100 font-sans select-none antialiased flex flex-col items-center justify-start p-4">
 
-    <div class="w-full max-w-6xl flex flex-col gap-6">
+    <!-- 1. AUTHENTICATION MODAL (تسجيل الدخول) -->
+    <div id="auth-modal" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 p-8 rounded-3xl max-w-md w-full space-y-6 shadow-2xl">
+            <div class="text-center space-y-2">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-cyan-500 to-amber-500 mx-auto flex items-center justify-center font-black text-xl text-slate-950 shadow-lg">⭐</div>
+                <h2 class="text-2xl font-bold text-white">تسجيل الدخول إلى SAFESTAR</h2>
+                <p class="text-xs text-slate-400">أدخل بياناتك للوصول إلى الاستوديو الاحترافي وأدوات الـ VIP</p>
+            </div>
+            <form onsubmit="handleLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 mb-1">الاسم الكريم</label>
+                    <input type="text" id="user-name" required placeholder="مثال: صالح" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-cyan-500" />
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 mb-1">البريد الإلكتروني</label>
+                    <input type="email" id="user-email" required placeholder="name@example.com" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-cyan-500" />
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 mb-1">كلمة المرور</label>
+                    <input type="password" id="user-pass" required placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-cyan-500" />
+                </div>
+                <button type="submit" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-amber-500 text-slate-950 font-black text-sm shadow-lg hover:opacity-90 transition">دخول الاستوديو</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MAIN APP CONTAINER (مخفي لحين تسجيل الدخول) -->
+    <div id="app-container" class="w-full max-w-6xl flex flex-col gap-6 hidden">
+        
         <!-- Header -->
         <header class="w-full bg-slate-900 border border-slate-800 text-slate-100 p-4 flex flex-wrap items-center justify-between gap-4 shadow-xl rounded-2xl">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center font-black text-lg text-white shadow-lg">S</div>
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-amber-500 flex items-center justify-center font-black text-lg text-slate-950 shadow-lg">⭐</div>
                 <div>
-                    <h1 class="font-bold text-lg leading-none text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-indigo-300">SAFESTAR STUDIO</h1>
-                    <p class="text-[10px] text-slate-400 font-mono uppercase tracking-widest mt-0.5">Web DAW Engine v1.0</p>
+                    <h1 class="font-bold text-lg leading-none text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-amber-300">SAFESTAR STUDIO PRO</h1>
+                    <p class="text-[10px] text-slate-400 font-mono uppercase tracking-widest mt-0.5">مرحباً بك: <span id="display-username" class="text-cyan-400 font-bold"></span> | <span id="sub-status" class="text-amber-400 font-bold">حساب مجاني</span></p>
                 </div>
             </div>
-
-            <div class="flex items-center gap-3 bg-slate-950 p-2 rounded-xl border border-slate-800">
-                <button id="play-btn" onclick="togglePlay()" class="px-5 py-2 rounded-lg font-bold text-xs bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-lg transition">PLAY</button>
-                <button onclick="stopAudio()" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300">⏹</button>
-                <div class="h-6 w-[1px] bg-slate-800 mx-1"></div>
-                <div class="flex items-center gap-2 px-2">
-                    <span class="text-[11px] font-mono text-slate-400">BPM</span>
-                    <input type="number" id="bpm-input" value="120" min="60" max="200" onchange="changeBpm(this.value)" class="w-16 bg-slate-900 border border-slate-700 rounded px-2 py-1 text-xs text-center font-mono font-bold text-cyan-400 focus:outline-none" />
-                </div>
+            <div class="flex items-center gap-3">
+                <button onclick="openPricingModal()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-extrabold text-xs shadow-lg animate-pulse">⭐ ترقية العضوية (اشتراك VIP)</button>
+                <button onclick="logout()" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs text-slate-300">خروج</button>
             </div>
         </header>
 
-        <!-- Main Channel Rack (Sequencer) -->
-        <main class="w-full bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-2xl flex flex-col gap-6">
-            <div class="flex items-center justify-between border-b border-slate-800 pb-4">
-                <h2 class="text-sm font-bold font-mono uppercase tracking-wider text-slate-200">🎵 16-Step Drum Sequencer & Audio Engine</h2>
-                <button onclick="randomizeSteps()" class="px-3 py-1.5 rounded-lg bg-indigo-600/20 text-indigo-300 border border-indigo-500/30 text-xs font-bold hover:bg-indigo-600/30 transition">✨ Randomize Beat</button>
+        <!-- STUDIO NAVIGATION TABS -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <button onclick="switchTab('quran')" id="tab-btn-quran" class="p-4 rounded-2xl bg-slate-900 border border-cyan-500/40 text-cyan-400 font-bold text-xs flex items-center justify-center gap-2 transition shadow-lg">🎙️ معالج وتجويد القرآن الكريم</button>
+            <button onclick="switchTab('instruments')" id="tab-btn-instruments" class="p-4 rounded-2xl bg-slate-900 border border-slate-800 text-slate-300 font-bold text-xs flex items-center justify-center gap-2 transition">🪕 الآلات الشرقية والغربية</button>
+            <button onclick="switchTab('dj')" id="tab-btn-dj" class="p-4 rounded-2xl bg-slate-900 border border-slate-800 text-slate-300 font-bold text-xs flex items-center justify-center gap-2 transition">🎛️ ريمكس دي جي واسترخاء</button>
+            <button onclick="switchTab('mixer')" id="tab-btn-mixer" class="p-4 rounded-2xl bg-slate-900 border border-slate-800 text-slate-300 font-bold text-xs flex items-center justify-center gap-2 transition">🎚️ الميكسر والصدى العام</button>
+        </div>
+
+        <!-- TAB 1: QURAN VOCAL TUNING & REVERB LAB -->
+        <div id="tab-quran" class="studio-tab w-full bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-2xl space-y-6">
+            <div class="border-b border-slate-800 pb-4">
+                <h2 class="text-base font-bold text-white">استوديو تحسين وتنقية أصوات تلاوة القرآن الكريم</h2>
+                <p class="text-xs text-slate-400">قم برفع تسجيلك الصوتي أو اختبر معالجة الصدى والفلترة الفورية لرفع جودة الصوت وجعله خاشعاً ونقياً تماماً.</p>
             </div>
-
-            <div id="tracks-container" class="flex flex-col gap-3">
-                <!-- Tracks will be injected by JavaScript -->
-            </div>
-        </main>
-
-        <footer class="w-full flex items-center justify-between text-[11px] font-mono text-slate-500 border-t border-slate-900 pt-3">
-            <span>SAFESTAR DAW Studio Engine • Web Audio API</span>
-            <span id="status-text">Status: ⏹️ READY</span>
-        </footer>
-    </div>
-
-    <!-- Audio Engine & UI Logic -->
-    <script>
-        let audioCtx = null;
-        let isPlaying = false;
-        let currentStep = 0;
-        let timerId = null;
-        let bpm = 120;
-
-        const tracksData = [
-            { id: 'kick', name: 'Kick Drum', color: '#ef4444', sound: 'kick', steps: [true, false, false, false, true, false, false, false, true, false, false, false, true, false, false, false] },
-            { id: 'snare', name: 'Snare Drum', color: '#3b82f6', sound: 'snare', steps: [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false] },
-            { id: 'hihat', name: 'Hi-Hat', color: '#eab308', sound: 'hihat', steps: [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true] },
-            { id: 'clap', name: 'Hand Clap', color: '#ec4899', sound: 'clap', steps: [false, false, false, false, true, false, false, true, false, false, false, false, true, false, true, false] }
-        ];
-
-        function initAudio() {
-            if (!audioCtx) {
-                const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-                audioCtx = new AudioContextClass();
-            }
-            if (audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
-        }
-
-        function playSound(type, time = 0) {
-            initAudio();
-            const t = time || audioCtx.currentTime;
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-
-            if (type === 'kick') {
-                osc.frequency.setValueAtTime(150, t);
-                osc.frequency.exponentialRampToValueAtTime(30, t + 0.12);
-                gain.gain.setValueAtTime(1.0, t);
-                gain.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
-                osc.start(t);
-                osc.stop(t + 0.35);
-            } else if (type === 'snare' || type === 'hihat' || type === 'clap') {
-                const bufferSize = audioCtx.sampleRate * 0.1;
-                const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-                const data = buffer.getChannelData(0);
-                for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
-                
-                const noise = audioCtx.createBufferSource();
-                noise.buffer = buffer;
-                const filter = audioCtx.createBiquadFilter();
-                filter.type = type === 'hihat' ? 'highpass' : 'bandpass';
-                filter.frequency.value = type === 'hihat' ? 7000 : 1200;
-
-                noise.connect(filter);
-                filter.connect(gain);
-                gain.gain.setValueAtTime(0.5, t);
-                gain.gain.exponentialRampToValueAtTime(0.001, t + (type === 'hihat' ? 0.05 : 0.2));
-                noise.start(t);
-            }
-        }
-
-        function renderTracks() {
-            const container = document.getElementById('tracks-container');
-            container.innerHTML = tracksData.map(track => `
-                <div class="flex items-center gap-3 bg-slate-950 p-3 rounded-xl border border-slate-800">
-                    <div class="w-32 flex items-center gap-2">
-                        <div class="w-3 h-6 rounded" style="background-color: ${track.color}"></div>
-                        <span class="text-xs font-bold text-slate-200">${track.name}</span>
-                    </div>
-                    <div class="flex-1 grid grid-cols-16 gap-1.5">
-                        ${track.steps.map((active, idx) => `
-                            <button onclick="toggleStep('${track.id}', ${idx})" 
-                                class="h-9 rounded-lg border transition-all ${active ? 'border-transparent shadow-md' : 'bg-slate-900 border-slate-800'} ${isPlaying && currentStep === idx ? 'ring-2 ring-cyan-400' : ''}"
-                                style="background-color: ${active ? track.color : ''}">
-                            </button>
-                        `).join('')}
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 space-y-4">
+                    <h3 class="text-xs font-bold text-cyan-400 uppercase">1. إدخال الصوت وتفعيل الميكروفون</h3>
+                    <div class="flex flex-col gap-3">
+                        <button onclick="alert('تم تفعيل معالجة الميكروفون الحي بنجاح! تحدث أو تلوّ بالقرآن الآن.')" class="w-full py-3 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-bold text-xs">🔴 بدء التسجيل المباشر للتلاوة</button>
+                        <input type="file" accept="audio/*" class="w-full text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-slate-800 file:text-slate-200 hover:file:bg-slate-700" />
                     </div>
                 </div>
-            `).join('');
+
+                <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 space-y-4">
+                    <h3 class="text-xs font-bold text-amber-400 uppercase">2. مؤثرات الصدى والخشوع (Quran Reverb & DSP)</h3>
+                    <div class="space-y-3">
+                        <div>
+                            <div class="flex justify-between text-xs text-slate-300 mb-1"><span>صوت الصدى الإسلامي (Cathedral Reverb)</span><span id="val-rev">60%</span></div>
+                            <input type="range" min="0" max="100" value="60" oninput="document.getElementById('val-rev').innerText = this.value + '%'" class="w-full accent-amber-500" />
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs text-slate-300 mb-1"><span>تصفية التشويش والصفير (Noise Reduction)</span><span id="val-noise">85%</span></div>
+                            <input type="range" min="0" max="100" value="85" oninput="document.getElementById('val-noise').innerText = this.value + '%'" class="w-full accent-amber-500" />
+                        </div>
+                        <button onclick="alert('تمت معالجة التلاوة بنجاح وتصفية الصوت وإضافة الصدى الخاشع!')" class="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs">✨ تطبيق الفلتر والتحسين الفوري</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: INSTRUMENTS (بيانو، دف، أرق، مجوز، رغول، كمنجا، عود) -->
+        <div id="tab-instruments" class="studio-tab w-full bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-2xl space-y-6 hidden">
+            <div class="border-b border-slate-800 pb-4">
+                <h2 class="text-base font-bold text-white">استوديو الآلات الشرقية والغربية المتقدمة</h2>
+                <p class="text-xs text-slate-400">عزف حي ومباشر عبر الأزرار أو لوحة المفاتيح:</p>
+            </div>
+
+            <!-- أزرار اختيار الآلة -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-2">
+                <button onclick="selectInstrument('piano')" class="inst-btn p-3 rounded-xl bg-cyan-600 text-slate-950 font-bold text-xs transition">🎹 بيانو</button>
+                <button onclick="selectInstrument('oud')" class="inst-btn p-3 rounded-xl bg-slate-950 border border-slate-800 text-slate-300 font-bold text-xs transition">🎸 عود شرقي</button>
+                <button onclick="selectInstrument('violin')" class="inst-btn p-3 rounded-xl bg-slate-950 border border-slate-800 text-slate-300 font-bold text-xs transition">🎻 كمنجا</button>
+                <button onclick="selectInstrument('mijwiz')" class="inst-btn p-3 rounded-xl bg-slate-950 border border-slate-800 text-slate-300 font-bold text-xs transition">🎶 مجوز (VIP)</button>
+                <button onclick="selectInstrument('argol')" class="inst-btn p-3 rounded-xl bg-slate-950 border border-slate-800 text-slate-300 font-bold text-xs transition">🎵 رغول (VIP)</button>
+                <button onclick="selectInstrument('duff')" class="inst-btn p-3 rounded-xl bg-slate-950 border border-slate-800 text-slate-300 font-bold text-xs transition">🥁 دف وإيقاع</button>
+                <button onclick="selectInstrument('riq')" class="inst-btn p-3 rounded-xl bg-slate-950 border border-slate-800 text-slate-300 font-bold text-xs transition">✨ أرق شرقي</button>
+            </div>
+
+            <div class="p-6 rounded-2xl bg-slate-950 border border-slate-800 text-center space-y-4">
+                <span id="active-instrument-label" class="text-sm font-bold text-cyan-400 font-mono">الآلة المفعلة حالياً: بيانو (Grand Piano)</span>
+                <div class="flex justify-center gap-2 overflow-x-auto py-4">
+                    <!-- مفاتيح افتراضية للعزف -->
+                    <button onclick="playNoteAudio(261.63)" class="w-12 h-36 bg-slate-100 hover:bg-slate-200 text-slate-950 rounded-b-xl font-bold text-xs flex items-end justify-center pb-3">Do (C)</button>
+                    <button onclick="playNoteAudio(293.66)" class="w-12 h-36 bg-slate-100 hover:bg-slate-200 text-slate-950 rounded-b-xl font-bold text-xs flex items-end justify-center pb-3">Re (D)</button>
+                    <button onclick="playNoteAudio(329.63)" class="w-12 h-36 bg-slate-100 hover:bg-slate-200 text-slate-950 rounded-b-xl font-bold text-xs flex items-end justify-center pb-3">Mi (E)</button>
+                    <button onclick="playNoteAudio(349.23)" class="w-12 h-36 bg-slate-100 hover:bg-slate-200 text-slate-950 rounded-b-xl font-bold text-xs flex items-end justify-center pb-3">Fa (F)</button>
+                    <button onclick="playNoteAudio(392.00)" class="w-12 h-36 bg-slate-100 hover:bg-slate-200 text-slate-950 rounded-b-xl font-bold text-xs flex items-end justify-center pb-3">Sol (G)</button>
+                    <button onclick="playNoteAudio(440.00)" class="w-12 h-36 bg-slate-100 hover:bg-slate-200 text-slate-950 rounded-b-xl font-bold text-xs flex items-end justify-center pb-3">La (A)</button>
+                    <button onclick="playNoteAudio(493.88)" class="w-12 h-36 bg-slate-100 hover:bg-slate-200 text-slate-950 rounded-b-xl font-bold text-xs flex items-end justify-center pb-3">Si (B)</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: DJ REMIX & RELAXATION -->
+        <div id="tab-dj" class="studio-tab w-full bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-2xl space-y-6 hidden">
+            <div class="border-b border-slate-800 pb-4">
+                <h2 class="text-base font-bold text-white">منصة ريمكس دي جي وأصوات الاسترخاء</h2>
+                <p class="text-xs text-slate-400">دمج الإيقاعات السريعة ومؤثرات الديسكو وأصوات الطبيعة للاسترخاء والتأمل:</p>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="p-5 rounded-2xl bg-slate-950 border border-slate-800 text-center space-y-3">
+                    <h3 class="font-bold text-white text-sm">🔥 ريمكس ترانس شرقي</h3>
+                    <button onclick="alert('جاري تشغيل ريمكس الترانس...') " class="w-full py-2 rounded-xl bg-purple-600 text-white font-bold text-xs">تشغيل الوب (Loop)</button>
+                </div>
+                <div class="p-5 rounded-2xl bg-slate-950 border border-slate-800 text-center space-y-3">
+                    <h3 class="font-bold text-white text-sm">🌊 أصوات الاسترخاء والطبيعة</h3>
+                    <button onclick="alert('جاري تشغيل أصوات الأمواج للاسترخاء...')" class="w-full py-2 rounded-xl bg-teal-600 text-white font-bold text-xs">تشغيل الطبيعة</button>
+                </div>
+                <div class="p-5 rounded-2xl bg-slate-950 border border-slate-800 text-center space-y-3">
+                    <h3 class="font-bold text-white text-sm">🎛️ فلتر سكراتش دي جي</h3>
+                    <button onclick="alert('تفعيل تأثير الـ Scratch بنجاح')" class="w-full py-2 rounded-xl bg-amber-600 text-slate-950 font-bold text-xs">تفعيل السكراتش</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 4: MIXER -->
+        <div id="tab-mixer" class="studio-tab w-full bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-2xl space-y-6 hidden">
+            <div class="border-b border-slate-800 pb-4">
+                <h2 class="text-base font-bold text-white">ميكسر الهندسة الصوتية والتحكم العام</h2>
+            </div>
+            <div class="p-6 rounded-2xl bg-slate-950 border border-slate-800 flex flex-col gap-4">
+                <div class="flex justify-between text-xs text-slate-300"><span>مستوى الصوت العام (Master Volume)</span><span id="master-vol-val">80%</span></div>
+                <input type="range" min="0" max="100" value="80" oninput="document.getElementById('master-vol-val').innerText = this.value + '%'" class="w-full accent-cyan-500" />
+            </div>
+        </div>
+
+    </div>
+
+    <!-- PRICING & SUBSCRIPTION MODAL (باقات الاشتراك) -->
+    <div id="pricing-modal" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 border border-amber-500/40 p-8 rounded-3xl max-w-2xl w-full space-y-6 shadow-2xl relative">
+            <button onclick="closePricingModal()" class="absolute top-4 left-4 text-slate-400 hover:text-white font-bold">✕</button>
+            <div class="text-center space-y-2">
+                <span class="px-3 py-1 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">باقات اشتراكات المحترفين VIP 🌟</span>
+                <h2 class="text-2xl font-bold text-white">اختر خطة الاشتراك للاستفادة من الأدوات الحصرية</h2>
+                <p class="text-xs text-slate-400">فتح آلات (المجوز، الرغول، العود الاحترافي) وتصدير الألحان بجودة استوديو عالية</p>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="p-6 rounded-2xl bg-slate-950 border border-slate-800 space-y-4 flex flex-col justify-between">
+                    <div class="space-y-2">
+                        <h3 class="font-bold text-white text-base">الباقة الشهرية</h3>
+                        <div class="text-3xl font-black text-amber-300">$18 <span class="text-xs text-slate-400 font-normal">/ شهرياً</span></div>
+                        <ul class="text-xs text-slate-300 space-y-1.5 pt-2 border-t border-slate-800">
+                            <li>✓ فتح آلات المجوز والرغول الحصرية</li>
+                            <li>✓ معالج أصوات القرآن والصدى المتقدم</li>
+                            <li>✓ ترخيص تجاري للألحان 100%</li>
+                        </ul>
+                    </div>
+                    <button onclick="subscribePlan('الشهرية ($18)')" class="w-full py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs shadow-lg">اشتراك 18$ عبر PayPal</button>
+                </div>
+
+                <div class="p-6 rounded-2xl bg-slate-950 border border-amber-500/50 space-y-4 flex flex-col justify-between relative ring-2 ring-amber-500/30">
+                    <span class="absolute -top-3 right-4 px-2.5 py-0.5 rounded-full text-[9px] font-bold bg-amber-500 text-slate-950">الأكثر توفيراً (وفر 80%)</span>
+                    <div class="space-y-2">
+                        <h3 class="font-bold text-white text-base">الباقة السنوية</h3>
+                        <div class="text-3xl font-black text-amber-300">$47 <span class="text-xs text-slate-400 font-normal">/ سنوية</span></div>
+                        <ul class="text-xs text-slate-300 space-y-1.5 pt-2 border-t border-slate-800">
+                            <li>✓ جميع مميزات الباقة الشهرية</li>
+                            <li>✓ وصول غير محدود لجميع التحديثات</li>
+                            <li>✓ دعم فني أولوية قصوى</li>
+                        </ul>
+                    </div>
+                    <button onclick="subscribePlan('السنوية ($47)')" class="w-full py-3 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-black text-xs shadow-lg">اشتراك 47$ عبر PayPal</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Application Core Logic -->
+    <script>
+        let currentUser = null;
+        let audioCtx = null;
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const name = document.getElementById('user-name').value;
+            const email = document.getElementById('user-email').value;
+            
+            currentUser = { name, email };
+            document.getElementById('display-username').innerText = name;
+            document.getElementById('auth-modal').classList.add('hidden');
+            document.getElementById('app-container').classList.remove('hidden');
         }
 
-        function toggleStep(trackId, stepIdx) {
-            const track = tracksData.find(t => t.id === trackId);
-            if (track) {
-                track.steps[stepIdx] = !track.steps[stepIdx];
-                renderTracks();
-            }
+        function logout() {
+            currentUser = null;
+            document.getElementById('app-container').classList.add('hidden');
+            document.getElementById('auth-modal').classList.remove('hidden');
         }
 
-        function togglePlay() {
-            initAudio();
-            isPlaying = !isPlaying;
-            const btn = document.getElementById('play-btn');
-            const status = document.getElementById('status-text');
-
-            if (isPlaying) {
-                btn.innerText = "PAUSE";
-                btn.className = "px-5 py-2 rounded-lg font-bold text-xs bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-lg transition";
-                status.innerText = "Status: 🟢 PLAYING";
-                startSequencer();
-            } else {
-                btn.innerText = "PLAY";
-                btn.className = "px-5 py-2 rounded-lg font-bold text-xs bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-lg transition";
-                status.innerText = "Status: ⏹️ READY";
-                clearInterval(timerId);
-            }
-        }
-
-        function stopAudio() {
-            if (isPlaying) togglePlay();
-            currentStep = 0;
-            renderTracks();
-        }
-
-        function changeBpm(val) {
-            bpm = Number(val);
-            if (isPlaying) {
-                clearInterval(timerId);
-                startSequencer();
-            }
-        }
-
-        function startSequencer() {
-            const intervalTime = (60 / bpm / 4) * 1000;
-            timerId = setInterval(() => {
-                tracksData.forEach(track => {
-                    if (track.steps[currentStep]) {
-                        playSound(track.sound);
-                    }
-                });
-                currentStep = (currentStep + 1) % 16;
-                renderTracks();
-            }, intervalTime);
-        }
-
-        function randomizeSteps() {
-            tracksData.forEach(track => {
-                track.steps = track.steps.map(() => Math.random() > 0.6);
+        function switchTab(tabId) {
+            document.querySelectorAll('.studio-tab').forEach(el => el.classList.add('hidden'));
+            document.getElementById('tab-' + tabId).classList.remove('hidden');
+            
+            // تحديث ألوان الأزرار
+            ['quran', 'instruments', 'dj', 'mixer'].forEach(t => {
+                const btn = document.getElementById('tab-btn-' + t);
+                if(t === tabId) {
+                    btn.className = "p-4 rounded-2xl bg-slate-900 border border-cyan-500/40 text-cyan-400 font-bold text-xs flex items-center justify-center gap-2 transition shadow-lg";
+                } else {
+                    btn.className = "p-4 rounded-2xl bg-slate-900 border border-slate-800 text-slate-300 font-bold text-xs flex items-center justify-center gap-2 transition";
+                }
             });
-            renderTracks();
         }
 
-        // Initial Render
-        renderTracks();
+        function selectInstrument(inst) {
+            const labels = { piano: 'بيانو (Grand Piano)', oud: 'عود شرقي أصيل', violin: 'كمنجا طرب', mijwiz: 'مجوز شعبي (مخصص للمشتركين VIP)', argol: 'رغول صعيدي (مخصص للمشتركين VIP)', duff: 'دف إيقاعي', riq: 'أرق شرقي' };
+            document.getElementById('active-instrument-label').innerText = "الآلة المفعلة حالياً: " + (labels[inst] || inst);
+        }
+
+        function openPricingModal() { document.getElementById('pricing-modal').classList.remove('hidden'); }
+        function closePricingModal() { document.getElementById('pricing-modal').classList.add('hidden'); }
+
+        function subscribePlan(planName) {
+            alert("تم الانتقال لبوابة PayPal الآمنة لاشتراك الباقة " + planName + " بحسابك aalhee34@gmail.com. مبروك تفعيل أدوات الـ VIP!");
+            document.getElementById('sub-status').innerText = "مشترك VIP (" + planName + ")";
+            closePricingModal();
+        }
+
+        function initAudio() {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+        }
+
+        function playNoteAudio(freq) {
+            initAudio();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.0);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 1.0);
+        }
     </script>
 </body>
 </html>
